@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -6,7 +5,6 @@ import 'package:instazub/src/models/index.dart';
 import 'package:instazub/src/presentation/mixin/init_mixin.dart';
 import 'package:instazub/src/presentation/routes.dart';
 import 'package:redux/redux.dart';
-import 'package:instazub/src/actions/index.dart';
 
 void main() {
   runApp(const Instazub());
@@ -20,7 +18,6 @@ class Instazub extends StatefulWidget {
 }
 
 class _InstazubState extends State<Instazub> with InitMixin<Instazub> {
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Store<AppState>>(

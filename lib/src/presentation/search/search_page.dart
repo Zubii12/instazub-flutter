@@ -20,7 +20,7 @@ class SearchPage extends StatelessWidget {
                 final dynamic user = await Navigator.pushNamed(context, AppRoutes.searchUsers);
                 if (user is AppUser) {
                   StoreProvider.of<AppState>(context)
-                  //todo open profile page
+                      //todo open profile page
                       .dispatch(UpdateFollowing(add: user.uid));
                 }
               },

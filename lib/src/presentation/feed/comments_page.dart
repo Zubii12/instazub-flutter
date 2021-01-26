@@ -72,9 +72,9 @@ class _CommentsPageState extends State<CommentsPage> {
                                   : ListView.builder(
                                       itemCount: comments.length,
                                       itemBuilder: (BuildContext context, int index) {
-                                        final Comment comment = comments[index];
+                                        //final Comment comment = comments[index];
                                         //final AppUser user = users[comment.id];
-                                        final Post post = posts.firstWhere((Post post) => post.id == info.postId);
+                                        //final Post post = posts.firstWhere((Post post) => post.id == info.postId);
                                         //todo add post description first
                                         return Container(
                                           child: Row(
