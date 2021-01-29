@@ -33,7 +33,7 @@ class _$CommentSerializer implements StructuredSerializer<Comment> {
       serializers.serialize(object.text, specifiedType: const FullType(String)),
       'createdAt',
       serializers.serialize(object.createdAt,
-          specifiedType: const FullType(DateTime)),
+          specifiedType: const FullType(String)),
       'likes',
       serializers.serialize(object.likes, specifiedType: const FullType(int)),
     ];
@@ -70,7 +70,7 @@ class _$CommentSerializer implements StructuredSerializer<Comment> {
           break;
         case 'createdAt':
           result.createdAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'likes':
           result.likes = serializers.deserialize(value,
@@ -205,7 +205,7 @@ class _$Comment extends Comment {
   @override
   final String text;
   @override
-  final DateTime createdAt;
+  final String createdAt;
   @override
   final int likes;
 
@@ -303,9 +303,9 @@ class CommentBuilder implements Builder<Comment, CommentBuilder> {
   String get text => _$this._text;
   set text(String text) => _$this._text = text;
 
-  DateTime _createdAt;
-  DateTime get createdAt => _$this._createdAt;
-  set createdAt(DateTime createdAt) => _$this._createdAt = createdAt;
+  String _createdAt;
+  String get createdAt => _$this._createdAt;
+  set createdAt(String createdAt) => _$this._createdAt = createdAt;
 
   int _likes;
   int get likes => _$this._likes;

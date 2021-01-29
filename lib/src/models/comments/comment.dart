@@ -15,7 +15,7 @@ abstract class Comment implements Built<Comment, CommentBuilder> {
 
   String get text;
 
-  DateTime get createdAt;
+  String get createdAt;
 
   int get likes;
 

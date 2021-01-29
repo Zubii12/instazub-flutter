@@ -16,9 +16,7 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
 
   BuiltList<AppUser> get searchResult;
 
-  BuiltMap<String, AppUser> get followers;
-
-  BuiltMap<String, AppUser> get following;
+  BuiltMap<String, AppUser> get users;
 
   Map<String, dynamic> get json => serializers.serializeWith(serializer, this) as Map<String, dynamic>;
 

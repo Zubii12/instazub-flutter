@@ -18,7 +18,7 @@ class CommentsApi {
         ..postId = postId
         ..senderUid = senderUid
         ..text = text
-        ..createdAt = DateTime.now()
+        ..createdAt = Timestamp.now().toString()
         ..likes = 0;
     });
     await reference.set(comment.json);
@@ -29,7 +29,7 @@ class CommentsApi {
     return _firestore //
         .collection('comments')
         .where('postId', isEqualTo: postId)
-        //.orderBy('createdAt')
+        .orderBy('createdAt')
         .snapshots()
         .map((QuerySnapshot snapshot) => snapshot.docs //
                 .map((QueryDocumentSnapshot document) {

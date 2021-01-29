@@ -25,12 +25,12 @@ This is a clone of Instagram with the following features:
 * [x] add tags
 * [x] add person
 * [x] add location
-* [ ] post comment
+* [x] post comment
 
 ## Feed Page
 
 * [x] show posts of users that I follow
-* [x] show posts in realtime  
+* [x] show posts in realtime
 * [ ] add comment
 * [ ] like (double tap to like)
 * [ ] share

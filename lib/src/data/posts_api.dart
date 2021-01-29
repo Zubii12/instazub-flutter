@@ -43,9 +43,8 @@ class PostsApi {
         .where('uid', isEqualTo: uid)
         .snapshots()
         .map((QuerySnapshot snapshot) => snapshot.docs //
-                .map((QueryDocumentSnapshot document) {
-              return Post.fromJson(document.data());
-            }).toList())
+            .map((QueryDocumentSnapshot document) => Post.fromJson(document.data()))
+            .toList())
         .doOnData((List<Post> list) => list);
   }
 

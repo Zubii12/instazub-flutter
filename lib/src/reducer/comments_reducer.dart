@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:instazub/src/actions/index.dart';
 import 'package:instazub/src/models/index.dart';
 import 'package:redux/redux.dart';
@@ -9,17 +10,15 @@ Reducer<CommentsState> commentsReducer = combineReducers(<Reducer<CommentsState>
 ]);
 
 CommentsState _createCommentSuccessful(CommentsState state, CreateCommentSuccessful action) {
-  return state.rebuild((CommentsStateBuilder b) => b.comments.add(action.comment));
+  return state.rebuild((CommentsStateBuilder b) {
+    if (!b.comments.build().contains(action.comment)) {
+      b.comments.add(action.comment);
+    }
+  });
 }
 
 CommentsState _onCommentsEvent(CommentsState state, OnCommentsEvent action) {
-  return state.rebuild((CommentsStateBuilder b) {
-    for (final Comment comment in action.comments) {
-      if (!b.comments.build().contains(comment)) {
-        b.comments.add(comment);
-      }
-    }
-  });
+  return state.rebuild((CommentsStateBuilder b) => b.comments = ListBuilder<Comment>(action.comments));
 }
 
 CommentsState _updateCommentInfo(CommentsState state, UpdateCommentInfo action) {

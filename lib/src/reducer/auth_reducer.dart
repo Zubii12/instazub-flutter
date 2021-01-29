@@ -61,5 +61,7 @@ AuthState _updateFollowingSuccessful(AuthState state, UpdateFollowingSuccessful 
 }
 
 AuthState _getUserSuccessful(AuthState state, GetUserSuccessful action) {
-  return state.rebuild((AuthStateBuilder b) => b.following[action.user.uid] = action.user);
+  return state.rebuild((AuthStateBuilder b) {
+    b.users[action.user.uid] = action.user;
+  });
 }

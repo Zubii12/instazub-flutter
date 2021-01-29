@@ -48,16 +48,29 @@ class AddPostPage extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
               ),
               GridView.builder(
-                //scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   mainAxisSpacing: 4.0,
                   crossAxisSpacing: 4.0,
                 ),
-                itemCount: info.paths.length,
+                itemCount: info.paths.length + 1,
                 itemBuilder: (BuildContext context, int index) {
-                  final String path = info.paths[index];
+                  if (index == 0) {
+                    return Center(
+                      child: IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () async {
+                          final PickedFile file = await ImagePicker().getImage(source: ImageSource.gallery);
+
+                          if (file != null) {
+                            StoreProvider.of<AppState>(context).dispatch(UpdatePostInfo(addImage: file.path));
+                          }
+                        },
+                      ),
+                    );
+                  }
+                  final String path = info.paths[index - 1];
                   return GridTile(
                     child: InkWell(
                       child: Image.file(
@@ -82,19 +95,6 @@ class AddPostPage extends StatelessWidget {
                 },
               ),
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              PickedFile file;
-              try {
-                file = await ImagePicker().getImage(source: ImageSource.gallery);
-              } catch (e) {
-                print(e);
-              }
-              if (file != null) {
-                StoreProvider.of<AppState>(context).dispatch(UpdatePostInfo(addImage: file.path));
-              }
-            },
           ),
         );
       },

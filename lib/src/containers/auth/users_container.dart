@@ -1,14 +1,14 @@
 part of auth_containers;
 
-class FollowingContainer extends StatelessWidget {
-  const FollowingContainer({Key key, @required this.builder}) : super(key: key);
+class UsersContainer extends StatelessWidget {
+  const UsersContainer({Key key, @required this.builder}) : super(key: key);
 
   final ViewModelBuilder<Map<String, AppUser>> builder;
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, Map<String, AppUser>>(
-      converter: (Store<AppState> store) => store.state.auth.following.asMap(),
+      converter: (Store<AppState> store) => store.state.auth.users.asMap(),
       builder: builder,
     );
   }

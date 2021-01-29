@@ -39,6 +39,11 @@ class CommentsEpics {
             .listen(action.postId) //
             .expand<AppAction>((List<Comment> comments) => <AppAction>[
                   ListenForComments.event(comments),
+                  ...comments
+                      .map((Comment comment) => comment.senderUid)
+                      .toSet()
+                      .where((String uid) => store.state.auth.users[uid] == null)
+                      .map((String uid) => GetUser(uid)),
                 ])
             .takeUntil(actions
                 .whereType<ListenForCommentsDone>()

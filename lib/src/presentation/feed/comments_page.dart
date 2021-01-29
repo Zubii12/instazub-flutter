@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:instazub/src/actions/comments/index.dart';
+import 'package:instazub/src/actions/index.dart';
 import 'package:instazub/src/containers/auth/index.dart';
 import 'package:instazub/src/containers/index.dart';
 import 'package:instazub/src/models/auth/index.dart';
@@ -44,12 +45,13 @@ class _CommentsPageState extends State<CommentsPage> {
       builder: (BuildContext context, AppUser user) {
         return CommentInfoContainer(
           builder: (BuildContext context, CommentInfo info) {
-            return FollowingContainer(
+            return UsersContainer(
               builder: (BuildContext context, Map<String, AppUser> users) {
                 return CommentsContainer(
                   builder: (BuildContext context, List<Comment> comments) {
                     return PostsContainer(
                       builder: (BuildContext context, List<Post> posts) {
+                        final Post post = posts.firstWhere((Post post) => post.id == info.postId);
                         return Form(
                           key: _key,
                           child: SafeArea(
@@ -65,37 +67,98 @@ class _CommentsPageState extends State<CommentsPage> {
                                 ),
                                 backgroundColor: Colors.black,
                               ),
-                              body: comments.isEmpty
-                                  ? const Center(
+                              body: Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      if (user.photoUrl != null)
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CircleAvatar(
+                                            backgroundImage: NetworkImage(user.photoUrl),
+                                          ),
+                                        )
+                                      else
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.grey.shade900,
+                                            child: Text(
+                                              user.username[0].toUpperCase(),
+                                            ),
+                                          ),
+                                        ),
+                                      if (post.description == null || post.description.isEmpty)
+                                        const SizedBox.shrink()
+                                      else
+                                        Text(post.description)
+                                    ],
+                                  ),
+                                  const Divider(
+                                    height: 24,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  if (comments.isEmpty)
+                                    const Center(
                                       child: Text('No comments yet'),
                                     )
-                                  : ListView.builder(
-                                      itemCount: comments.length,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        //final Comment comment = comments[index];
-                                        //final AppUser user = users[comment.id];
-                                        //final Post post = posts.firstWhere((Post post) => post.id == info.postId);
-                                        //todo add post description first
-                                        return Container(
-                                          child: Row(
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
-                                                child: user.photoUrl != null
-                                                    ? Image.network(
-                                                        user.photoUrl,
-                                                        height: 24,
-                                                        width: 24,
-                                                      )
-                                                    : const Icon(Icons.person),
-                                              ),
-                                              Text('${user.username}'),
-                                              //Text('${post.comments[user.uid]}')
-                                            ],
-                                          ),
-                                        );
-                                      },
+                                  else
+                                    Expanded(
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: comments.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          final Comment comment = comments[index];
+                                          final AppUser user = users[comment.senderUid];
+                                          print('users $users');
+                                          if (user != null)
+                                            return Column(
+                                              children: <Widget>[
+                                                Row(
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
+                                                      child: user.photoUrl != null
+                                                          ? CircleAvatar(
+                                                              backgroundImage: NetworkImage(user.photoUrl),
+                                                            )
+                                                          : CircleAvatar(
+                                                              backgroundColor: Colors.grey.shade900,
+                                                              child: Text(
+                                                                user.username[0].toUpperCase(),
+                                                              ),
+                                                            ),
+                                                    ),
+                                                    Text(
+                                                      '${user.username}',
+                                                      style: const TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Text('${comment.text}'),
+                                                    const Spacer(),
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                        Icons.favorite_border_outlined,
+                                                        size: 16,
+                                                      ),
+                                                      onPressed: () {
+                                                        // todo add like
+                                                      },
+                                                    )
+                                                  ],
+                                                ),
+                                                const Divider(),
+                                              ],
+                                            );
+                                          return const SizedBox.shrink();
+                                        },
+                                      ),
                                     ),
+                                ],
+                              ),
                               bottomSheet: Container(
                                 color: Colors.black,
                                 child: Padding(
@@ -103,14 +166,17 @@ class _CommentsPageState extends State<CommentsPage> {
                                   child: Row(
                                     children: <Widget>[
                                       if (user.photoUrl != null)
-                                        Image.network(
-                                          user.photoUrl,
-                                          height: 32,
-                                          width: 32,
-                                          fit: BoxFit.fill,
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(user.photoUrl),
                                         )
                                       else
-                                        const Icon(Icons.person, size: 32),
+                                        CircleAvatar(
+                                          backgroundColor: Colors.grey.shade900,
+                                          child: Text(
+                                            user.username[0].toUpperCase(),
+                                          ),
+                                        ),
+                                      const SizedBox(width: 4),
                                       Expanded(
                                         child: Stack(
                                           children: <Widget>[
@@ -146,11 +212,13 @@ class _CommentsPageState extends State<CommentsPage> {
                                                   child: TextButton(
                                                     child: const Text('Send'),
                                                     onPressed: () {
-                                                      //todo
                                                       if (_key.currentState.validate()) {
-                                                        //todo
+                                                        StoreProvider.of<AppState>(context).dispatch(CreateComment(
+                                                            senderUid: user.uid,
+                                                            postId: post.id,
+                                                            text: _controller.text));
+                                                        _controller.clear();
                                                       }
-                                                      //StoreProvider.of<AppState>(context).dispatch(CreateComment(senderUid: user.uid, postId: , text: null))
                                                     },
                                                   ),
                                                 ),

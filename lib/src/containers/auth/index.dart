@@ -11,4 +11,4 @@ part 'registration_info_container.dart';
 
 part 'search_result_container.dart';
 
-part 'following_container.dart';
+part 'users_container.dart';

@@ -151,12 +151,8 @@ class _$AuthStateSerializer implements StructuredSerializer<AuthState> {
       serializers.serialize(object.searchResult,
           specifiedType:
               const FullType(BuiltList, const [const FullType(AppUser)])),
-      'followers',
-      serializers.serialize(object.followers,
-          specifiedType: const FullType(BuiltMap,
-              const [const FullType(String), const FullType(AppUser)])),
-      'following',
-      serializers.serialize(object.following,
+      'users',
+      serializers.serialize(object.users,
           specifiedType: const FullType(BuiltMap,
               const [const FullType(String), const FullType(AppUser)])),
     ];
@@ -195,13 +191,8 @@ class _$AuthStateSerializer implements StructuredSerializer<AuthState> {
                       BuiltList, const [const FullType(AppUser)]))
               as BuiltList<Object>);
           break;
-        case 'followers':
-          result.followers.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltMap,
-                  const [const FullType(String), const FullType(AppUser)])));
-          break;
-        case 'following':
-          result.following.replace(serializers.deserialize(value,
+        case 'users':
+          result.users.replace(serializers.deserialize(value,
               specifiedType: const FullType(BuiltMap,
                   const [const FullType(String), const FullType(AppUser)])));
           break;
@@ -542,15 +533,12 @@ class _$AuthState extends AuthState {
   @override
   final BuiltList<AppUser> searchResult;
   @override
-  final BuiltMap<String, AppUser> followers;
-  @override
-  final BuiltMap<String, AppUser> following;
+  final BuiltMap<String, AppUser> users;
 
   factory _$AuthState([void Function(AuthStateBuilder) updates]) =>
       (new AuthStateBuilder()..update(updates)).build();
 
-  _$AuthState._(
-      {this.user, this.info, this.searchResult, this.followers, this.following})
+  _$AuthState._({this.user, this.info, this.searchResult, this.users})
       : super._() {
     if (info == null) {
       throw new BuiltValueNullFieldError('AuthState', 'info');
@@ -558,11 +546,8 @@ class _$AuthState extends AuthState {
     if (searchResult == null) {
       throw new BuiltValueNullFieldError('AuthState', 'searchResult');
     }
-    if (followers == null) {
-      throw new BuiltValueNullFieldError('AuthState', 'followers');
-    }
-    if (following == null) {
-      throw new BuiltValueNullFieldError('AuthState', 'following');
+    if (users == null) {
+      throw new BuiltValueNullFieldError('AuthState', 'users');
     }
   }
 
@@ -580,18 +565,14 @@ class _$AuthState extends AuthState {
         user == other.user &&
         info == other.info &&
         searchResult == other.searchResult &&
-        followers == other.followers &&
-        following == other.following;
+        users == other.users;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc(
-            $jc($jc($jc(0, user.hashCode), info.hashCode),
-                searchResult.hashCode),
-            followers.hashCode),
-        following.hashCode));
+        $jc($jc($jc(0, user.hashCode), info.hashCode), searchResult.hashCode),
+        users.hashCode));
   }
 
   @override
@@ -600,8 +581,7 @@ class _$AuthState extends AuthState {
           ..add('user', user)
           ..add('info', info)
           ..add('searchResult', searchResult)
-          ..add('followers', followers)
-          ..add('following', following))
+          ..add('users', users))
         .toString();
   }
 }
@@ -624,17 +604,10 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
   set searchResult(ListBuilder<AppUser> searchResult) =>
       _$this._searchResult = searchResult;
 
-  MapBuilder<String, AppUser> _followers;
-  MapBuilder<String, AppUser> get followers =>
-      _$this._followers ??= new MapBuilder<String, AppUser>();
-  set followers(MapBuilder<String, AppUser> followers) =>
-      _$this._followers = followers;
-
-  MapBuilder<String, AppUser> _following;
-  MapBuilder<String, AppUser> get following =>
-      _$this._following ??= new MapBuilder<String, AppUser>();
-  set following(MapBuilder<String, AppUser> following) =>
-      _$this._following = following;
+  MapBuilder<String, AppUser> _users;
+  MapBuilder<String, AppUser> get users =>
+      _$this._users ??= new MapBuilder<String, AppUser>();
+  set users(MapBuilder<String, AppUser> users) => _$this._users = users;
 
   AuthStateBuilder();
 
@@ -643,8 +616,7 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
       _user = _$v.user?.toBuilder();
       _info = _$v.info?.toBuilder();
       _searchResult = _$v.searchResult?.toBuilder();
-      _followers = _$v.followers?.toBuilder();
-      _following = _$v.following?.toBuilder();
+      _users = _$v.users?.toBuilder();
       _$v = null;
     }
     return this;
@@ -672,8 +644,7 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
               user: _user?.build(),
               info: info.build(),
               searchResult: searchResult.build(),
-              followers: followers.build(),
-              following: following.build());
+              users: users.build());
     } catch (_) {
       String _$failedField;
       try {
@@ -683,10 +654,8 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
         info.build();
         _$failedField = 'searchResult';
         searchResult.build();
-        _$failedField = 'followers';
-        followers.build();
-        _$failedField = 'following';
-        following.build();
+        _$failedField = 'users';
+        users.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'AuthState', _$failedField, e.toString());

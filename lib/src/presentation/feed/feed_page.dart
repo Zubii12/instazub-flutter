@@ -26,8 +26,8 @@ class _FeedPageState extends State<FeedPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       store = StoreProvider.of<AppState>(context);
       store.state.auth.user.following //
-        ..map((String uid) => ListenForPosts(uid)).forEach(store.dispatch)
-        ..map((String uid) => GetUser(uid)).forEach(store.dispatch);
+          .map((String uid) => ListenForPosts(uid))
+          .forEach(store.dispatch);
     });
   }
 
@@ -41,12 +41,10 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FollowingContainer(
+    return UsersContainer(
       builder: (BuildContext context, Map<String, AppUser> following) {
         return PostsContainer(
           builder: (BuildContext context, List<Post> posts) {
-            print('following auth_state: $following');
-            print('posts: ${posts.length}');
             return Scaffold(
               appBar: AppBar(
                 leading: IconButton(
@@ -96,7 +94,7 @@ class _FeedPageState extends State<FeedPage> {
             ),
           ),*/
               ),
-              body: posts.isEmpty || following.isEmpty
+              body: posts.isEmpty && following.isEmpty
                   ? const Center(
                       child: Text('No posts yet.'),
                     )
@@ -106,157 +104,151 @@ class _FeedPageState extends State<FeedPage> {
                         itemBuilder: (BuildContext context, int index) {
                           final Post post = posts[index];
                           final AppUser user = following[post.uid];
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
-                                      child: user.photoUrl != null
-                                          ? Image.network(
-                                              user.photoUrl,
-                                              height: 24,
-                                              width: 24,
-                                            )
-                                          : const Icon(Icons.person),
-                                    ),
-                                    Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 2),
-                                          child: Text(
-                                            '${user.username}',
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
+                          if (user != null)
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
+                                        child: user.photoUrl != null
+                                            ? Image.network(
+                                                user.photoUrl,
+                                                height: 24,
+                                                width: 24,
+                                              )
+                                            : const Icon(Icons.person),
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 2),
+                                            child: Text(
+                                              '${user.username}',
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        if (post.lat != null || post.lng != null)
-                                          Padding(
-                                            padding: const EdgeInsets.only(bottom: 4),
-                                            child: Text('${post.lat} / ${post.lng}'),
-                                          )
-                                        else
-                                          const SizedBox.shrink()
-                                      ],
-                                    ),
-                                    const Spacer(),
-                                    IconButton(
-                                      icon: const Icon(Icons.settings_rounded),
-                                      onPressed: () {
-                                        //todo
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                //todo add multiple images and circle loading
-                                Image.network(post.images.first),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                        padding: const EdgeInsets.only(left: 4.0),
-                                        child: IconButton(
-                                          icon: const Icon(Icons.favorite_border_outlined),
-                                          onPressed: () {},
-                                          iconSize: 32,
-                                        )),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 12.0),
-                                      child: InkWell(
-                                        child: const Icon(Icons.messenger_outline, size: 32),
-                                        onTap: () {
-                                          StoreProvider.of<AppState>(context)
-                                              .dispatch(UpdateCommentInfo(postId: post.id, uid: post.uid));
-                                          Navigator.pushNamed(context, AppRoutes.comments);
+                                          if (post.lat != null || post.lng != null)
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 4),
+                                              child: Text('${post.lat} / ${post.lng}'),
+                                            )
+                                          else
+                                            const SizedBox.shrink()
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      IconButton(
+                                        icon: const Icon(Icons.settings_rounded),
+                                        onPressed: () {
+                                          //todo
                                         },
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 16.0, bottom: 4),
-                                      child: IconButton(
-                                        icon: const Icon(Icons.send_outlined),
-                                        onPressed: () {},
-                                        iconSize: 32,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 8.0, bottom: 8),
-                                      child: IconButton(
-                                        icon: const Icon(Icons.bookmark_border_outlined),
-                                        onPressed: () {},
-                                        iconSize: 36,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
-                                  child: Align(
-                                    child: Text(
-                                      '${post.likes} likes',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    alignment: Alignment.centerLeft,
+                                    ],
                                   ),
-                                ),
-                                if (post.description == null || post.description.isEmpty)
-                                  const SizedBox.shrink()
-                                else
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Builder(
-                                      builder: (BuildContext context) {
-                                        final String description = post.description;
-                                        final List<String> tags = post.tags.asList();
-                                        final List<String> users = post.users.asList();
-                                        String text = '';
-                                        // ignore: avoid_function_literals_in_foreach_calls
-                                        users.forEach((String user) => text = '$text @$user \n');
-                                        text = text + '$description \n';
-                                        // ignore: avoid_function_literals_in_foreach_calls
-                                        tags.forEach((String tag) => text = text + '#$tag ');
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8),
-                                          child: ReadMoreText(
-                                            text,
-                                            trimLines: 2,
-                                            colorClickableText: Colors.grey,
-                                            trimMode: TrimMode.Line,
-                                            trimCollapsedText: 'Show more',
-                                            trimExpandedText: 'Show less',
-                                          ),
-                                        );
-                                      },
-                                    ),
+                                  //todo add multiple images and circle loading
+                                  Image.network(post.images.first),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: <Widget>[
+                                      Padding(
+                                          padding: const EdgeInsets.only(left: 4.0),
+                                          child: IconButton(
+                                            icon: const Icon(Icons.favorite_border_outlined),
+                                            onPressed: () {},
+                                            iconSize: 32,
+                                          )),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 12.0),
+                                        child: InkWell(
+                                          child: const Icon(Icons.messenger_outline, size: 32),
+                                          onTap: () {
+                                            StoreProvider.of<AppState>(context)
+                                                .dispatch(UpdateCommentInfo(postId: post.id, uid: post.uid));
+                                            Navigator.pushNamed(context, AppRoutes.comments);
+                                          },
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 16.0, bottom: 4),
+                                        child: IconButton(
+                                          icon: const Icon(Icons.send_outlined),
+                                          onPressed: () {},
+                                          iconSize: 32,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+                                        child: IconButton(
+                                          icon: const Icon(Icons.bookmark_border_outlined),
+                                          onPressed: () {},
+                                          iconSize: 36,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: InkWell(
-                                    child: const Align(
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
+                                    child: Align(
                                       child: Text(
-                                        'Show comments',
-                                        style: TextStyle(color: Colors.grey),
+                                        '${post.likes} likes',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       alignment: Alignment.centerLeft,
                                     ),
-                                    onTap: () {
-                                      StoreProvider.of<AppState>(context)
-                                          .dispatch(UpdateCommentInfo(postId: post.id, uid: post.uid));
-                                      Navigator.pushNamed(context, AppRoutes.comments);
-                                    },
                                   ),
-                                ),
-                                const Divider(),
-                              ],
-                            ),
-                          );
+                                  if (post.description == null || post.description.isEmpty)
+                                    const SizedBox.shrink()
+                                  else
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Builder(
+                                        builder: (BuildContext context) {
+                                          final String description = post.description;
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: ReadMoreText(
+                                              description,
+                                              trimLines: 2,
+                                              colorClickableText: Colors.grey,
+                                              trimMode: TrimMode.Line,
+                                              trimCollapsedText: 'Show more',
+                                              trimExpandedText: 'Show less',
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                      child: const Align(
+                                        child: Text(
+                                          'Show comments',
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                      ),
+                                      onTap: () {
+                                        StoreProvider.of<AppState>(context)
+                                            .dispatch(UpdateCommentInfo(postId: post.id, uid: post.uid));
+                                        Navigator.pushNamed(context, AppRoutes.comments);
+                                      },
+                                    ),
+                                  ),
+                                  const Divider(),
+                                ],
+                              ),
+                            );
+                          return const SizedBox.shrink();
                         },
                       ),
                     ),
