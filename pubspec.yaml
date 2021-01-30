@@ -46,6 +46,9 @@ dev_dependencies:
   built_value_generator: any
   freezed: any
 
+dependency_overrides:
+  analyzer: '0.41.2'
+
 flutter:
   assets:
     - assets/images/

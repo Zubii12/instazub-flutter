@@ -114,6 +114,7 @@ class _CommentsPageState extends State<CommentsPage> {
                                           print('users $users');
                                           if (user != null)
                                             return Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Row(
                                                   children: <Widget>[
@@ -145,10 +146,19 @@ class _CommentsPageState extends State<CommentsPage> {
                                                         size: 16,
                                                       ),
                                                       onPressed: () {
-                                                        // todo add like
+                                                        StoreProvider.of<AppState>(context).dispatch(
+                                                          CreateLike(
+                                                            parentId: comment.id,
+                                                            type: LikeType.comment,
+                                                          ),
+                                                        );
                                                       },
                                                     )
                                                   ],
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 56.0),
+                                                  child: Text('${comment.likes} likes'),
                                                 ),
                                                 const Divider(),
                                               ],

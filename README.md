@@ -31,8 +31,8 @@ This is a clone of Instagram with the following features:
 
 * [x] show posts of users that I follow
 * [x] show posts in realtime
-* [ ] add comment
-* [ ] like (double tap to like)
+* [x] add comment
+* [x] like (double tap to like)
 * [ ] share
 * [ ] save
 * [ ] show post owner profile

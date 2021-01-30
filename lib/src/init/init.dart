@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:instazub/src/actions/index.dart';
 import 'package:instazub/src/data/auth_api.dart';
 import 'package:instazub/src/data/comments_api.dart';
+import 'package:instazub/src/data/likes_api.dart';
 import 'package:instazub/src/data/posts_api.dart';
 import 'package:instazub/src/epics/app_epics.dart';
 import 'package:instazub/src/models/index.dart';
@@ -22,7 +23,9 @@ Future<Store<AppState>> init() async {
   final AuthApi authApi = AuthApi(auth: auth, firestore: firestore);
   final PostsApi postsApi = PostsApi(firestore: firestore, storage: storage);
   final CommentsApi commentsApi = CommentsApi(firestore: firestore);
-  final AppEpics epic = AppEpics(authApi: authApi, postsApi: postsApi, commentsApi: commentsApi);
+  final LikesApi likesApi = LikesApi(firestore: firestore);
+
+  final AppEpics epic = AppEpics(authApi: authApi, postsApi: postsApi, commentsApi: commentsApi, likesApi: likesApi);
 
   return Store<AppState>(
     reducer,

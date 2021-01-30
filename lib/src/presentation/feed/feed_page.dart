@@ -152,17 +152,35 @@ class _FeedPageState extends State<FeedPage> {
                                     ],
                                   ),
                                   //todo add multiple images and circle loading
-                                  Image.network(post.images.first),
+                                  InkWell(
+                                    child: Image.network(post.images.first),
+                                    onDoubleTap: () {
+                                      StoreProvider.of<AppState>(context).dispatch(
+                                        CreateLike(
+                                          parentId: post.id,
+                                          type: LikeType.post,
+                                        ),
+                                      );
+                                    },
+                                  ),
                                   const SizedBox(height: 4),
                                   Row(
                                     children: <Widget>[
                                       Padding(
-                                          padding: const EdgeInsets.only(left: 4.0),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.favorite_border_outlined),
-                                            onPressed: () {},
-                                            iconSize: 32,
-                                          )),
+                                        padding: const EdgeInsets.only(left: 4.0),
+                                        child: IconButton(
+                                          icon: const Icon(Icons.favorite_border_outlined),
+                                          onPressed: () {
+                                            StoreProvider.of<AppState>(context).dispatch(
+                                              CreateLike(
+                                                parentId: post.id,
+                                                type: LikeType.post,
+                                              ),
+                                            );
+                                          },
+                                          iconSize: 32,
+                                        ),
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 12.0),
                                         child: InkWell(

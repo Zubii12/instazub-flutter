@@ -2,6 +2,7 @@ import 'package:instazub/src/actions/index.dart';
 import 'package:instazub/src/models/index.dart';
 import 'package:instazub/src/reducer/auth_reducer.dart';
 import 'package:instazub/src/reducer/comments_reducer.dart';
+import 'package:instazub/src/reducer/likes_reducer.dart';
 import 'package:instazub/src/reducer/posts_reducer.dart';
 import 'package:redux/redux.dart';
 
@@ -24,7 +25,8 @@ AppState _reducer(AppState state, dynamic action) {
     b
       ..auth = authReducer(state.auth, action).toBuilder()
       ..posts = postsReducer(state.posts, action).toBuilder()
-      ..comments = commentsReducer(state.comments, action).toBuilder();
+      ..comments = commentsReducer(state.comments, action).toBuilder()
+      ..likes = likesReducer(state.likes, action).toBuilder();
   });
 }
 
